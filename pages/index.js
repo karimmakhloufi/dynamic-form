@@ -2,9 +2,10 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Index.module.css";
 import Logo from "../public/logo.png";
-import CounterComponent from "../components/CounterComponent";
+import { useState, Fragment } from "react";
 
 const Home = () => {
+  const [skills, setSkills] = useState([{ title: "", votes: 0, id: 0 }]);
   return (
     <div className={styles.container}>
       <Head>
@@ -16,13 +17,49 @@ const Home = () => {
       <main className={styles.main}>
         <Image src={Logo} />
         <h1 className={styles.title}>Welcome to Next.js!</h1>
+        <button
+          onClick={() => {
+            setSkills([
+              ...skills,
+              { title: "", votes: 0, id: skills[skills.length - 1].id + 1 },
+            ]);
+          }}
+        >
+          Add
+        </button>
 
-        <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <CounterComponent />
+        {skills.map((el) => (
+          <Fragment key={el.id}>
+            <input
+              key={el.id + "title"}
+              value={el.title}
+              onChange={(e) => {
+                const oldSkills = skills.concat();
+                console.log("oldskills", oldSkills);
+                const index = oldSkills.findIndex(
+                  (skill) => skill.id === el.id
+                );
+                console.log("index", index);
+                oldSkills[index].title = e.target.value;
+                setSkills(oldSkills);
+              }}
+            />
+            <input
+              key={el.id + "votes"}
+              value={el.votes}
+              onChange={(e) => {
+                const oldSkills = skills.concat();
+                console.log("oldskills", oldSkills);
+                const index = oldSkills.findIndex(
+                  (skill) => skill.id === el.id
+                );
+                console.log("index", index);
+                oldSkills[index].votes = e.target.value;
+                setSkills(oldSkills);
+              }}
+            />
+          </Fragment>
+        ))}
       </main>
     </div>
   );
